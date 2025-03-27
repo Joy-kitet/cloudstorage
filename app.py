@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Simulated cloud storage (in-memory list)
+
 files = []
 
 @app.route("/")
@@ -12,8 +12,11 @@ def index():
 @app.route("/upload", methods=["POST"])
 def upload():
     filename = request.form.get("filename")
-    if filename and filename not in files:
-        files.append(filename)
+    if not filename:
+        return "Filename is required", 400
+    if filename in files:
+        return "File already exists", 400
+    files.append(filename)
     return redirect(url_for("index"))
 
 @app.route("/update", methods=["POST"])
